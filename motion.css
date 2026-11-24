@@ -52,3 +52,53 @@ body.motion-paused *,body.motion-paused *::before,body.motion-paused *::after{sc
  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
 @media print{.motion-toggle,.hero-scroll-cue,.story-progress{display:none}.method.motion-story{min-height:0!important}.method-sticky{position:static!important}.reveal.pending{opacity:1!important;transform:none!important}}
+
+/* Approved transfer: Green, Digital and footer only (24 November 2026). */
+.worlds .world-grid{display:block}
+.worlds .world-card{display:grid;grid-template-columns:1.15fr 1fr;gap:8%;background:transparent;color:#003766;overflow:visible;align-items:center;margin-bottom:120px}
+.worlds .energy-world{background:#fafafa;margin:0 calc(var(--pad)*-1) 120px;padding:0 var(--pad)}
+.worlds .world-card.energy-focus{box-shadow:none}
+.worlds .world-art{height:75svh;min-height:500px;max-height:900px;overflow:hidden;border-radius:2px;background:#dce6ec}
+.worlds .world-art img{display:block;width:100%;height:100%;object-fit:cover;transition:none;will-change:transform}
+.worlds .world-content{padding:0;position:relative}
+.worlds .world-content>.eyebrow{font-size:14px;letter-spacing:.04em}
+.worlds .world-content h3{font-size:clamp(44px,5.2vw,82px);font-weight:800;line-height:.99;margin:25px 0 28px;letter-spacing:-.045em;color:#003766}
+.worlds .world-content p{font-size:21px;line-height:1.5;max-width:480px;margin-bottom:35px}
+.worlds .world-content .button{background:transparent;border:0;border-bottom:1px solid #004a87;padding:12px 0;border-radius:0;gap:45px}
+.worlds .world-content .button:hover{background:none;color:#7c37dd;border-color:#7c37dd;transform:none}
+.worlds .digital-world{grid-template-columns:1fr 1.15fr;margin:0 calc(var(--pad)*-1);padding:100px var(--pad);background:#003766;color:#fff;gap:8%}
+.worlds .digital-world .world-art{order:2;background:#052b4c}
+.worlds .digital-world .world-content{order:1}
+.worlds .digital-world .world-content>.eyebrow{color:#b786ff}
+.worlds .digital-world .world-content h3{color:#fff}
+.worlds .digital-world .world-content p{color:#d3e1ed}
+.worlds .digital-world .world-content .button{color:#fff;border-color:#ffffff80}
+.worlds .digital-world .world-content .button:hover{color:#b786ff;border-color:#b786ff}
+.footer{background:#fafafa;padding-block:55px}
+@media(max-width:1100px){
+ .worlds .world-card{gap:6%}
+ .worlds .world-content h3{font-size:52px}
+ .worlds .world-content p{font-size:19px}
+ .worlds .world-art{min-height:460px}
+}
+@media(max-width:960px){
+ .worlds .world-card{grid-template-columns:1fr;gap:35px;margin-bottom:85px}
+ .worlds .world-art{height:56svh;min-height:350px;max-height:650px}
+ .worlds .world-content{max-width:640px}
+ .worlds .world-content h3{font-size:clamp(42px,7vw,62px)}
+ .worlds .world-content p{font-size:19px}
+ .worlds .digital-world{grid-template-columns:1fr;margin:0 calc(var(--pad)*-1);padding:70px var(--pad);gap:35px}
+ .worlds .digital-world .world-art{order:0}
+ .worlds .digital-world .world-content{order:1}
+ .worlds .world-art img{will-change:auto}
+}
+@media(max-width:600px){
+ .worlds .world-art{height:54svh;min-height:340px}
+ .worlds .world-content h3{font-size:46px}
+ .worlds .world-content p{font-size:18px}
+ .worlds .digital-world{padding-block:60px}
+ .worlds .world-content .button{font-size:16px;gap:25px}
+ .footer{padding-block:40px}
+}
+@media(max-width:380px){.worlds .world-content h3{font-size:41px}}
+@media print{.worlds .world-art{height:300px;min-height:0}}
