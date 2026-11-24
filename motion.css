@@ -1,0 +1,54 @@
+/* E2B Energy in Motion V2. All additions belong to this isolated experiment. */
+#contenuto{position:relative;isolation:isolate}
+/* The existing identity and typography stay in charge. Motion lives in the margins. */
+main>section{--focus:0}
+.section-label .section-bar{transition:background .6s,box-shadow .6s}
+.energy-focus .section-label .section-bar{background:#a66af1;box-shadow:0 0 16px #b786ff85}
+.world-card{transition:box-shadow .7s,background .7s}
+.world-card.energy-focus{box-shadow:inset 0 0 0 1px #9d71df70,0 12px 40px #004a8708}
+.world-art img{will-change:transform;transform:translateY(var(--image-drift,0px)) scale(1.09)!important;transition:none}
+.hero-art{transition:none;transform:translate3d(0,var(--hero-drift,0px),0)!important;will-change:transform}
+.hero-art .ribbon-shape{animation:none}
+.hero-copy{transform:translate3d(0,var(--copy-drift,0px),0);will-change:transform}
+.hero-scroll-cue{position:absolute;left:var(--pad);bottom:30px;display:flex;gap:13px;align-items:center;color:#e6d5ff;font-size:14px;letter-spacing:.025em;z-index:5}
+.hero-scroll-cue i{height:38px;width:1px;background:#c29af965;position:relative;overflow:hidden}
+.hero-scroll-cue i::after{content:"";position:absolute;left:0;top:0;width:1px;height:18px;background:#e8d6ff;transform:translateY(var(--cue-travel,0px))}
+body.motion-ready .reveal{transition:opacity .85s cubic-bezier(.2,.7,.2,1),transform .85s cubic-bezier(.2,.7,.2,1)}
+body.motion-ready .reveal.pending{transform:translateY(28px)}
+.motion-toggle{position:fixed;bottom:18px;right:18px;z-index:45;display:flex;align-items:center;gap:9px;border:1px solid #cad5df;background:#ffffffed;color:#004a87;border-radius:30px;padding:9px 15px;font-size:14px;line-height:1.3;box-shadow:0 3px 15px #0037660c;backdrop-filter:blur(12px)}
+.motion-toggle svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
+.motion-toggle:hover{border-color:#7c37dd;color:#7c37dd}
+.motion-toggle[aria-pressed="true"]{background:#f2ecfb}
+.motion-toggle .play-icon{display:none}
+.motion-toggle[aria-pressed="true"] .play-icon{display:block}
+.motion-toggle[aria-pressed="true"] .pause-icon{display:none}
+.story-progress{display:flex;gap:6px;width:100%;margin-top:28px;height:2px}
+.story-progress span{flex:1;background:#ffffff30;position:relative;overflow:hidden}
+.story-progress span::after{content:"";position:absolute;inset:0;background:#e2c9ff;transform-origin:left;transform:scaleX(var(--stage-fill,0));transition:transform .12s linear}
+.method-tabs button{transition:color .4s}
+.method-panel[data-stage] .method-diagram span{transition:background .45s,box-shadow .45s}
+.method-panel[data-stage] .method-diagram span:first-child{box-shadow:0 0 24px #e0c3ff30}
+@media(min-width:1100px) and (min-height:720px) and (prefers-reduced-motion:no-preference){
+ body:not(.motion-paused) .method.motion-story{padding:0;min-height:180svh}
+ body:not(.motion-paused) .method-sticky{position:sticky;top:var(--header);padding:66px var(--pad) 48px;min-height:calc(100svh - var(--header))}
+ body:not(.motion-paused) .method-sticky>.section-label{margin-bottom:30px}
+ body:not(.motion-paused) .method-sticky .method-layout{margin-top:44px}
+ body:not(.motion-paused) .method-sticky .method-diagram{height:78px;bottom:calc(100% + 8px)}
+ body:not(.motion-paused) .method-sticky h2{font-size:clamp(40px,4vw,64px)}
+ body:not(.motion-paused) .method-sticky .method-tabs button{font-size:clamp(38px,4vw,60px);padding-block:20px}
+}
+body.motion-paused .hero-art,body.motion-paused .hero-copy,body.motion-paused .world-art img{transform:none!important;will-change:auto}
+body.motion-paused .reveal.pending{opacity:1!important;transform:none!important}
+body.motion-paused *,body.motion-paused *::before,body.motion-paused *::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+@media(max-width:960px){
+ .hero-scroll-cue{bottom:22px;left:25px;font-size:13px}
+ .hero-scroll-cue i{height:26px}
+ .motion-toggle{right:12px;bottom:12px;font-size:13px;padding:9px 12px}
+ .world-art img{will-change:auto}
+}
+@media(prefers-reduced-motion:reduce){
+ .hero-art,.hero-copy,.world-art img{transform:none!important;will-change:auto}
+ .reveal.pending{opacity:1!important;transform:none!important}
+ *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+@media print{.motion-toggle,.hero-scroll-cue,.story-progress{display:none}.method.motion-story{min-height:0!important}.method-sticky{position:static!important}.reveal.pending{opacity:1!important;transform:none!important}}
