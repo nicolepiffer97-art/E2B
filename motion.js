@@ -85,3 +85,65 @@
   document.fonts?.ready.then(scheduleMeasure);
   syncPreference();
 })();
+
+/* Decorative wave: update one SVG path, only while it is visible. */
+(() => {
+  const flow=document.querySelector('.integration-flow');
+  const svg=flow?.querySelector('.energy-wave');
+  const path=svg?.querySelector('#energy-wave-path');
+  if(!path)return;
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const mobile=matchMedia('(max-width:700px)');
+  const gradient=svg.querySelector('#energy-wave-color');
+  const steps=[...flow.querySelectorAll('.integration-step')];
+  let width=1000,height=84,vertical=false,inView=false,frame=0,measureFrame=0;
+  let phase=0,lastTime=0,lastPaint=0;
+  function draw(){
+    const length=vertical?height:width;
+    const amplitude=vertical?4.5:10;
+    const segments=80;
+    let d='';
+    for(let i=0;i<=segments;i++){
+      const t=i/segments;
+      const envelope=Math.pow(Math.sin(Math.PI*t),.8);
+      const drift=Math.sin(t*Math.PI*3.4-phase)*.7+Math.sin(t*Math.PI*6.8+phase*.61)*.22+Math.sin(t*Math.PI*1.5-phase*.43)*.16;
+      const offset=envelope*drift*amplitude;
+      const x=vertical?20+offset:t*length;
+      const y=vertical?t*length:42+offset;
+      d+=(i?'L':'M')+x.toFixed(2)+' '+y.toFixed(2)+' ';
+    }
+    path.setAttribute('d',d);
+  }
+  function tick(time){
+    frame=0;
+    if(!inView||document.hidden||reduced.matches){lastTime=0;return;}
+    if(lastTime)phase+=Math.min(time-lastTime,64)*.00085;
+    lastTime=time;
+    if(time-lastPaint>=30){draw();lastPaint=time;}
+    frame=requestAnimationFrame(tick);
+  }
+  function sync(){
+    if(frame){cancelAnimationFrame(frame);frame=0;}
+    lastTime=0;
+    if(reduced.matches){phase=0;draw();}
+    else if(inView&&!document.hidden)frame=requestAnimationFrame(tick);
+  }
+  function measure(){
+    measureFrame=0;vertical=mobile.matches;
+    width=vertical?40:flow.clientWidth;
+    height=vertical?Math.max(80,steps.at(-1).offsetTop+steps.at(-1).offsetHeight+8):84;
+    svg.style.height=height+'px';
+    svg.setAttribute('viewBox','0 0 '+width+' '+height);
+    gradient.setAttribute('x2',vertical?'0':'1');gradient.setAttribute('y2',vertical?'1':'0');
+    draw();
+  }
+  function scheduleMeasure(){if(!measureFrame)measureFrame=requestAnimationFrame(measure);}
+  const observer=new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;sync();},{threshold:0});
+  observer.observe(flow);
+  const resize=new ResizeObserver(scheduleMeasure);resize.observe(flow);
+  mobile.addEventListener('change',scheduleMeasure);
+  reduced.addEventListener('change',sync);
+  document.addEventListener('visibilitychange',sync);
+  document.fonts?.ready.then(scheduleMeasure);
+  measure();
+})();

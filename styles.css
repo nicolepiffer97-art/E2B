@@ -660,3 +660,13 @@ a.brand-row:focus-visible{outline-offset:5px}
  .tech-connection{margin-top:24px;padding-top:18px}
  .technology-panel>.button{margin-top:24px}
 }
+
+/* A single, softly vibrating energy filament joins the three territories. */
+.integration-flow::before{display:none}
+.integration-flow .integration-node{display:none}
+.integration-flow .energy-wave{position:absolute;left:0;top:0;width:100%;height:84px;overflow:visible;pointer-events:none}
+.energy-wave use{fill:none;stroke:url(#energy-wave-color);stroke-linecap:round;vector-effect:non-scaling-stroke}
+.energy-wave-halo{stroke-width:7;opacity:.22;filter:url(#energy-wave-soft)}
+.energy-wave-thread{stroke-width:1.5;opacity:.9}
+@media(max-width:700px){.integration-flow .energy-wave{left:-10px;top:0;width:40px;height:calc(100% - 110px)}}
+@media print{.energy-wave-halo{display:none}}
