@@ -646,3 +646,15 @@ a.brand-row:focus-visible{outline-offset:5px}
 .tokenization-copy p{color:#466073;max-width:590px;font-size:19px}
 .tokenization-copy .text-link{max-width:280px;color:var(--blue);margin-top:30px}
 @media(max-width:700px){.integration-flow{grid-template-columns:1fr;gap:30px;margin-top:40px;padding:0 0 0 30px}.integration-flow::before{left:9px;right:auto;top:9px;bottom:115px;width:1px;height:auto;background:linear-gradient(var(--blue),var(--violet))}.integration-step{padding:0 0 0 15px}.integration-node{left:-30px;top:5px}.integration-step h3{font-size:30px;margin-bottom:10px}.integration-step p{max-width:none}.integration-summary{margin-top:0;padding-top:20px;font-size:18px}.tokenization{grid-template-columns:1fr;gap:28px;padding:50px 0}.tokenization h3{font-size:38px}.tokenization-copy p{font-size:18px}}
+
+/* Give the energy explorer breathing room, just below the hero's height. */
+@media(min-width:961px){
+ .system-explorer{min-height:clamp(520px,calc(100svh - var(--header) - 56px),1044px)}
+ .system-map{padding:28px 26px 24px}
+ .ecosystem{height:0;min-height:0;max-height:none;aspect-ratio:auto;flex:1 1 0}
+ .technology-panel{justify-content:center;padding:36px 32px}
+ .technology-heading{margin:22px 0 24px}
+ .technology-panel>p+p{margin-top:16px}
+ .tech-connection{margin-top:24px;padding-top:18px}
+ .technology-panel>.button{margin-top:24px}
+}
