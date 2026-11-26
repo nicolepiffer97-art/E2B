@@ -652,6 +652,7 @@ a.brand-row:focus-visible{outline-offset:5px}
  .system-explorer{min-height:clamp(520px,calc(100svh - var(--header) - 56px),1044px)}
  .system-map{padding:28px 26px 24px}
  .ecosystem{height:0;min-height:0;max-height:none;aspect-ratio:auto;flex:1 1 0}
+ .system-map .ecosystem{transform:scale(.94);transform-origin:center}
  .technology-panel{justify-content:center;padding:36px 32px}
  .technology-heading{margin:22px 0 24px}
  .technology-panel>p+p{margin-top:16px}
