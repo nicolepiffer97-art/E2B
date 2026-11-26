@@ -118,15 +118,35 @@
     let d='';
     for(let i=0;i<=80;i++)d+=(i?'L':'M')+coords(point(i/80))+' ';
     path.setAttribute('d',d);
-    // A single hairline wisp: no flashes, branching lightning, or cursor replacement.
-    const strength=pointer.strength*Math.min(1,Math.abs(pointer.normal)/18);
+    // A few short, softly irregular branches appear only in the pointer's field.
+    const strength=pointer.strength;
     if(strength>.01){
       const t=clamp(pointer.position,0,1),length=vertical?height:width;
-      const start=point(clamp(t-16/length,0,1));
-      const end=point(t,pointer.normal*.92);
-      const control=point(clamp(t-8/length,0,1),pointer.normal*.55+Math.sin(phase*2.7)*1.3);
-      response.setAttribute('d','M'+coords(start)+' Q'+coords(control)+' '+coords(end));
-      response.style.opacity=(strength*.24).toFixed(3);
+      let branches='';
+      const at=pixels=>clamp(t+pixels/length,0,1);
+      [-32,-12,13,34].forEach((distance,i)=>{
+        const seed=i*1.83;
+        const direction=Math.abs(pointer.normal)>5?Math.sign(pointer.normal):(i%2?1:-1);
+        const breath=Math.sin(phase*5.2+seed);
+        const tipAlong=Math.sin(phase*3.7+seed)*5+(i-1.5)*3;
+        const tipNormal=clamp(pointer.normal*.85+direction*(6+breath*2.5),-30,25);
+        const startT=at(distance),endT=at(tipAlong);
+        const base=offsetAt(startT);
+        const jitter=Math.sin(phase*8.1+seed)*2.2;
+        const middleT=startT+(endT-startT)*.52;
+        const middleNormal=base+(tipNormal-base)*.52+jitter;
+        const start=point(startT),middle=point(middleT,middleNormal),end=point(endT,tipNormal);
+        const bend1=point(startT+(endT-startT)*.24,base+(tipNormal-base)*.18-jitter);
+        const bend2=point(startT+(endT-startT)*.76,base+(tipNormal-base)*.83+jitter*.5);
+        branches+='M'+coords(start)+' Q'+coords(bend1)+' '+coords(middle)+' Q'+coords(bend2)+' '+coords(end)+' ';
+        if(i%2===0){
+          const fork=point(at(tipAlong+direction*7),clamp(tipNormal+direction*5,-32,25));
+          const forkBend=point(at(tipAlong+direction*3),middleNormal+direction*4);
+          branches+='M'+coords(middle)+' Q'+coords(forkBend)+' '+coords(fork)+' ';
+        }
+      });
+      response.setAttribute('d',branches);
+      response.style.opacity=(strength*.48).toFixed(3);
     }else response.style.opacity='0';
   }
   function resetPointer(){pointer.targetStrength=0;}

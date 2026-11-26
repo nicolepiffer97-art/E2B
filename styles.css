@@ -668,6 +668,6 @@ a.brand-row:focus-visible{outline-offset:5px}
 .energy-wave use{fill:none;stroke:url(#energy-wave-color);stroke-linecap:round;vector-effect:non-scaling-stroke}
 .energy-wave-halo{stroke-width:3.5;opacity:.11;filter:url(#energy-wave-soft)}
 .energy-wave-thread{stroke-width:.85;opacity:.72}
-.energy-wave-response{stroke:#7c37dd;stroke-width:.6;stroke-linecap:round;opacity:0;vector-effect:non-scaling-stroke}
+.energy-wave-response{stroke:#7c37dd;stroke-width:.55;stroke-linecap:round;stroke-linejoin:round;opacity:0;vector-effect:non-scaling-stroke}
 @media(max-width:700px){.integration-flow .energy-wave{left:-10px;top:0;width:40px;height:calc(100% - 110px)}}
 @media print{.energy-wave-halo{display:none}}
