@@ -507,10 +507,10 @@ a.brand-row:focus-visible{outline-offset:5px}
 
 /* E2B and the group: energy lifecycle versus each company's primary focus. */
 .group-intro h2{font-size:clamp(40px,4.2vw,66px)}
-.e2b-role{margin-top:32px;padding:30px;background:var(--blue);color:#fff;border-left:4px solid var(--violet)}
-.e2b-role>.eyebrow{font-size:13px;color:var(--lavender)}
+.e2b-role{margin-top:32px;padding:30px;background:#a1a8ad;color:var(--ink);border-left:4px solid var(--violet)}
+.e2b-role>.eyebrow{font-size:13px;color:var(--ink)}
 .e2b-role h3{font-size:clamp(30px,3vw,46px);margin:16px 0 24px}
-.e2b-role p{font-size:17px;color:#e0e9f1}
+.e2b-role p{font-size:17px;color:var(--ink)}
 .role-lifecycle{display:flex;gap:0;flex-wrap:wrap;margin-bottom:24px;font-size:15px}
 .role-lifecycle span+span{border-left:1px solid #b786ff;padding-left:15px;margin-left:15px}
 .brand-focus{font-size:13px;letter-spacing:.055em;text-transform:uppercase;color:var(--violet);display:block;margin-bottom:10px}
