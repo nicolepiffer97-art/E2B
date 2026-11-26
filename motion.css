@@ -89,3 +89,25 @@ body.motion-paused *,body.motion-paused *::before,body.motion-paused *::after{sc
 }
 @media(max-width:380px){.worlds .world-content h3{font-size:41px}}
 @media print{.worlds .world-art{height:300px;min-height:0}}
+
+/* One spacing rhythm for all section boundaries, including the sticky story. */
+:root{--section-space:clamp(56px,8svh,100px);--paragraph-size:18px}
+.hero,.section-pad{padding-block:var(--section-space)}
+.hero-copy{padding-block:0}
+.technology-panel>p,.tech-connection p{font-size:var(--paragraph-size);line-height:var(--leading-body)}
+.worlds .energy-world{margin-bottom:var(--section-space)}
+.worlds .digital-world{padding-block:var(--section-space);margin-bottom:0}
+.tokenization{padding-block:var(--section-space) 0;border-bottom:0}
+.footer{padding-block:var(--section-space)}
+@media(min-width:961px) and (max-width:1100px){
+ .technology-panel{padding:24px 26px}
+ .technology-heading{margin:12px 0 16px}
+ .technology-panel>p+p{margin-top:12px}
+ .tech-connection{margin-top:16px;padding-top:12px}
+ .technology-panel>.button{margin-top:16px}
+}
+@media(max-width:960px){:root{--section-space:56px}}
+@media(min-width:1100px) and (min-height:720px) and (prefers-reduced-motion:no-preference){
+ body:not(.motion-paused) .method.motion-story{padding:var(--section-space) var(--pad)}
+ body:not(.motion-paused) .method-sticky{padding:0;top:calc(var(--header) + var(--section-space));min-height:calc(100svh - var(--header) - var(--section-space) - var(--section-space))}
+}
