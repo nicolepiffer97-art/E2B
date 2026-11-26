@@ -10,18 +10,8 @@ main>section{--focus:0}
 .hero-art{transition:none;transform:translate3d(0,var(--hero-drift,0px),0)!important;will-change:transform}
 .hero-art .ribbon-shape{animation:none}
 .hero-copy{transform:translate3d(0,var(--copy-drift,0px),0);will-change:transform}
-.hero-scroll-cue{position:absolute;left:var(--pad);bottom:30px;display:flex;gap:13px;align-items:center;color:#e6d5ff;font-size:14px;letter-spacing:.025em;z-index:5}
-.hero-scroll-cue i{height:38px;width:1px;background:#c29af965;position:relative;overflow:hidden}
-.hero-scroll-cue i::after{content:"";position:absolute;left:0;top:0;width:1px;height:18px;background:#e8d6ff;transform:translateY(var(--cue-travel,0px))}
 body.motion-ready .reveal{transition:opacity .85s cubic-bezier(.2,.7,.2,1),transform .85s cubic-bezier(.2,.7,.2,1)}
 body.motion-ready .reveal.pending{transform:translateY(28px)}
-.motion-toggle{position:fixed;bottom:18px;right:18px;z-index:45;display:flex;align-items:center;gap:9px;border:1px solid #cad5df;background:#ffffffed;color:#004a87;border-radius:30px;padding:9px 15px;font-size:14px;line-height:1.3;box-shadow:0 3px 15px #0037660c;backdrop-filter:blur(12px)}
-.motion-toggle svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}
-.motion-toggle:hover{border-color:#7c37dd;color:#7c37dd}
-.motion-toggle[aria-pressed="true"]{background:#f2ecfb}
-.motion-toggle .play-icon{display:none}
-.motion-toggle[aria-pressed="true"] .play-icon{display:block}
-.motion-toggle[aria-pressed="true"] .pause-icon{display:none}
 .story-progress{display:flex;gap:6px;width:100%;margin-top:28px;height:2px}
 .story-progress span{flex:1;background:#ffffff30;position:relative;overflow:hidden}
 .story-progress span::after{content:"";position:absolute;inset:0;background:#e2c9ff;transform-origin:left;transform:scaleX(var(--stage-fill,0));transition:transform .12s linear}
@@ -41,9 +31,6 @@ body.motion-paused .hero-art,body.motion-paused .hero-copy,body.motion-paused .w
 body.motion-paused .reveal.pending{opacity:1!important;transform:none!important}
 body.motion-paused *,body.motion-paused *::before,body.motion-paused *::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 @media(max-width:960px){
- .hero-scroll-cue{bottom:22px;left:25px;font-size:13px}
- .hero-scroll-cue i{height:26px}
- .motion-toggle{right:12px;bottom:12px;font-size:13px;padding:9px 12px}
  .world-art img{will-change:auto}
 }
 @media(prefers-reduced-motion:reduce){
@@ -51,7 +38,7 @@ body.motion-paused *,body.motion-paused *::before,body.motion-paused *::after{sc
  .reveal.pending{opacity:1!important;transform:none!important}
  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
-@media print{.motion-toggle,.hero-scroll-cue,.story-progress{display:none}.method.motion-story{min-height:0!important}.method-sticky{position:static!important}.reveal.pending{opacity:1!important;transform:none!important}}
+@media print{.story-progress{display:none}.method.motion-story{min-height:0!important}.method-sticky{position:static!important}.reveal.pending{opacity:1!important;transform:none!important}}
 
 /* Approved transfer: Green, Digital and footer only (24 November 2026). */
 .worlds .world-grid{display:block}

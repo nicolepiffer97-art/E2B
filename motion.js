@@ -5,7 +5,6 @@
   if (!main) return;
   const media = matchMedia('(prefers-reduced-motion: reduce)');
   const stickyMedia = matchMedia('(min-width:1100px) and (min-height:720px)');
-  const toggle = document.querySelector('.motion-toggle');
   const method = document.querySelector('#metodo');
   const methodTabs = [...document.querySelectorAll('[data-method]')];
   const sections = [...main.querySelectorAll(':scope > section')];
@@ -13,10 +12,10 @@
   const images = cards.map(card => card.querySelector('.world-art img'));
   const bars = [...document.querySelectorAll('.story-progress span')];
   let bounds = [], imageBounds = [], origin = 0, viewHeight = 0;
-  let frame = 0, resizeFrame = 0, visible = !document.hidden, paused = false, activeStage = -1;
+  let frame = 0, resizeFrame = 0, visible = !document.hidden, activeStage = -1;
   let methodBounds, heroBounds, headerHeight = 94, lastFocus = null;
   const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v));
-  const still = () => paused || media.matches;
+  const still = () => media.matches;
   const box = el => {const r = el.getBoundingClientRect(); return {x:r.left,y:r.top + scrollY - origin,w:r.width,h:r.height,b:r.bottom + scrollY - origin};};
   const fmt = v => Math.round(v * 10) / 10;
   function measure() {
@@ -44,7 +43,6 @@
       const heroProgress=clamp(y/heroBounds.h);
       main.style.setProperty('--hero-drift',`${fmt(heroProgress*65)}px`);
       main.style.setProperty('--copy-drift',`${fmt(heroProgress*22)}px`);
-      main.style.setProperty('--cue-travel',`${fmt(heroProgress*20)}px`);
       imageBounds.forEach((b,i)=>{
         if(b.b>y && b.y<y+viewHeight){
           const drift=clamp((y+viewHeight*.5-b.y-b.h*.5)/viewHeight,-1,1)*(innerWidth<600?9:22);
@@ -71,13 +69,8 @@
   function scheduleMeasure(){if(!resizeFrame)resizeFrame=requestAnimationFrame(()=>{resizeFrame=0;measure();});}
   function syncPreference(){
     document.body.classList.toggle('motion-paused',still());
-    toggle.setAttribute('aria-pressed',String(still()));
-    toggle.querySelector('span').textContent=still()?'Movimento ridotto':'Riduci movimento';
-    toggle.setAttribute('aria-label',media.matches?'Movimento ridotto secondo le preferenze del dispositivo':still()?'Riattiva le animazioni':'Riduci le animazioni');
-    toggle.disabled=media.matches;
     activeStage=-1;scheduleMeasure();
   }
-  toggle.addEventListener('click',()=>{paused=!paused;syncPreference();});
   media.addEventListener('change',syncPreference);
   stickyMedia.addEventListener('change',scheduleMeasure);
   window.addEventListener('scroll',()=>{if(!still())requestFrame();},{passive:true});
