@@ -86,7 +86,7 @@
   syncPreference();
 })();
 
-/* Decorative wave: update one SVG path, only while it is visible. */
+/* A soft field attracts the filament gently toward a nearby fine pointer. */
 (() => {
   const flow=document.querySelector('.integration-flow');
   const svg=flow?.querySelector('.energy-wave');
@@ -95,36 +95,57 @@
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const mobile=matchMedia('(max-width:700px)');
   const gradient=svg.querySelector('#energy-wave-color');
+  const response=svg.querySelector('.energy-wave-response');
   const steps=[...flow.querySelectorAll('.integration-step')];
+  const pointer={position:.5,normal:0,strength:0,targetPosition:.5,targetNormal:0,targetStrength:0};
   let width=1000,height=84,vertical=false,inView=false,frame=0,measureFrame=0;
-  let phase=0,lastTime=0,lastPaint=0;
-  function draw(){
+  let phase=0,lastTime=0,lastPaint=0,left=0,documentTop=0;
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  function offsetAt(t){
+    const envelope=Math.pow(Math.max(0,Math.sin(Math.PI*t)),.8);
+    const drift=Math.sin(t*Math.PI*3.4-phase)*.7+Math.sin(t*Math.PI*6.8+phase*.61)*.22+Math.sin(t*Math.PI*1.5-phase*.43)*.16;
     const length=vertical?height:width;
-    const amplitude=vertical?4.5:10;
-    const segments=80;
-    let d='';
-    for(let i=0;i<=segments;i++){
-      const t=i/segments;
-      const envelope=Math.pow(Math.sin(Math.PI*t),.8);
-      const drift=Math.sin(t*Math.PI*3.4-phase)*.7+Math.sin(t*Math.PI*6.8+phase*.61)*.22+Math.sin(t*Math.PI*1.5-phase*.43)*.16;
-      const offset=envelope*drift*amplitude;
-      const x=vertical?20+offset:t*length;
-      const y=vertical?t*length:42+offset;
-      d+=(i?'L':'M')+x.toFixed(2)+' '+y.toFixed(2)+' ';
-    }
-    path.setAttribute('d',d);
+    const distance=(t-pointer.position)*length;
+    const field=Math.exp(-.5*(distance/82)**2)*pointer.strength;
+    const attraction=pointer.normal*.8+Math.sin(distance/20-phase*3)*1.1;
+    return envelope*(drift*(vertical?3.5:8)+field*attraction);
   }
+  function point(t,offset=offsetAt(t)){
+    return vertical?[20+offset,t*height]:[t*width,42+offset];
+  }
+  const coords=p=>p[0].toFixed(2)+' '+p[1].toFixed(2);
+  function draw(){
+    let d='';
+    for(let i=0;i<=80;i++)d+=(i?'L':'M')+coords(point(i/80))+' ';
+    path.setAttribute('d',d);
+    // A single hairline wisp: no flashes, branching lightning, or cursor replacement.
+    const strength=pointer.strength*Math.min(1,Math.abs(pointer.normal)/18);
+    if(strength>.01){
+      const t=clamp(pointer.position,0,1),length=vertical?height:width;
+      const start=point(clamp(t-16/length,0,1));
+      const end=point(t,pointer.normal*.92);
+      const control=point(clamp(t-8/length,0,1),pointer.normal*.55+Math.sin(phase*2.7)*1.3);
+      response.setAttribute('d','M'+coords(start)+' Q'+coords(control)+' '+coords(end));
+      response.style.opacity=(strength*.24).toFixed(3);
+    }else response.style.opacity='0';
+  }
+  function resetPointer(){pointer.targetStrength=0;}
   function tick(time){
     frame=0;
     if(!inView||document.hidden||reduced.matches){lastTime=0;return;}
-    if(lastTime)phase+=Math.min(time-lastTime,64)*.00085;
-    lastTime=time;
-    if(time-lastPaint>=30){draw();lastPaint=time;}
+    const dt=lastTime?Math.min(time-lastTime,64):16;
+    phase+=dt*.00085;lastTime=time;
+    const ease=1-Math.exp(-dt/95);
+    pointer.position+=(pointer.targetPosition-pointer.position)*ease;
+    pointer.normal+=(pointer.targetNormal-pointer.normal)*ease;
+    pointer.strength+=(pointer.targetStrength-pointer.strength)*(1-Math.exp(-dt/150));
+    if(time-lastPaint>=(pointer.strength>.01?14:30)){draw();lastPaint=time;}
     frame=requestAnimationFrame(tick);
   }
   function sync(){
     if(frame){cancelAnimationFrame(frame);frame=0;}
     lastTime=0;
+    if(reduced.matches||!inView||document.hidden){resetPointer();pointer.strength=0;}
     if(reduced.matches){phase=0;draw();}
     else if(inView&&!document.hidden)frame=requestAnimationFrame(tick);
   }
@@ -132,12 +153,25 @@
     measureFrame=0;vertical=mobile.matches;
     width=vertical?40:flow.clientWidth;
     height=vertical?Math.max(80,steps.at(-1).offsetTop+steps.at(-1).offsetHeight+8):84;
-    svg.style.height=height+'px';
-    svg.setAttribute('viewBox','0 0 '+width+' '+height);
+    svg.style.height=height+'px';svg.setAttribute('viewBox','0 0 '+width+' '+height);
     gradient.setAttribute('x2',vertical?'0':'1');gradient.setAttribute('y2',vertical?'1':'0');
-    draw();
+    const rect=svg.getBoundingClientRect();left=rect.left;documentTop=rect.top+scrollY;
+    resetPointer();draw();
   }
   function scheduleMeasure(){if(!measureFrame)measureFrame=requestAnimationFrame(measure);}
+  window.addEventListener('pointermove',event=>{
+    if(!inView||reduced.matches||!['mouse','pen'].includes(event.pointerType))return;
+    const x=event.clientX-left,y=event.clientY+scrollY-documentTop;
+    const along=vertical?y:x,normal=vertical?x-20:y-42,length=vertical?height:width;
+    const outside=along<0?-along:along>length?along-length:0;
+    const distance=Math.hypot(normal,outside);
+    pointer.targetPosition=clamp(along/length,0,1);
+    pointer.targetNormal=clamp(normal,-28,28);
+    pointer.targetStrength=Math.pow(Math.max(0,1-distance/90),1.2);
+  },{passive:true});
+  window.addEventListener('pointerout',event=>{if(!event.relatedTarget)resetPointer();},{passive:true});
+  window.addEventListener('blur',resetPointer);
+  window.addEventListener('scroll',resetPointer,{passive:true});
   const observer=new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;sync();},{threshold:0});
   observer.observe(flow);
   const resize=new ResizeObserver(scheduleMeasure);resize.observe(flow);
