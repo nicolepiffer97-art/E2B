@@ -665,6 +665,8 @@ a.brand-row:focus-visible{outline-offset:5px}
 .integration-flow::before{display:none}
 .integration-flow .integration-node{display:none}
 .integration-flow .energy-wave{position:absolute;left:0;top:0;width:100%;height:84px;overflow:visible;pointer-events:none}
+/* Center the resting axis in the 134px gap between the copy and the three headings. */
+@media(min-width:961px){.integration-flow .energy-wave{top:-33px}}
 /* A principal ribbon and five translucent, independently moving filaments. */
 .energy-wave{pointer-events:none;overflow:visible}
 .energy-flow-line{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
