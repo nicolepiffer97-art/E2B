@@ -671,10 +671,10 @@ a.brand-row:focus-visible{outline-offset:5px}
 .energy-flow-main{stroke-width:1.08;opacity:.86}
 .energy-flow-strand{stroke-width:.60;opacity:.22}
 .energy-flow-halo{stroke-width:4.5;opacity:.13}
-.energy-flow-local{stroke-width:6;opacity:0}
+.energy-flow-local,.energy-flow-response{opacity:0}
 .energy-flow-pulse{stroke-width:1.65;opacity:0}
 .energy-continuation-host{position:relative}
 .energy-continuation{position:absolute;left:var(--pad);bottom:calc((var(--section-space) - 40px)/2);width:calc(100% - var(--pad)*2);height:40px}
 @media(max-width:700px){.integration-flow .energy-wave{left:-10px;top:0;width:40px;height:100%}}
-@media(prefers-reduced-motion:reduce){.energy-flow-pulse,.energy-flow-local{display:none}}
+@media(prefers-reduced-motion:reduce){.energy-flow-pulse,.energy-flow-local,.energy-flow-response{display:none}}
 @media print{.energy-wave{display:none}}

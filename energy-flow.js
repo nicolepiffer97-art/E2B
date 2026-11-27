@@ -48,6 +48,17 @@
     }
     return path;
   }
+  // A filled lens tapers geometrically to zero at both tips, including beneath the blur.
+  function ribbon(points, radius) {
+    const edge = sign => points.map((p, i) => {
+      const a = points[Math.max(0, i - 1)], b = points[Math.min(points.length - 1, i + 1)];
+      const dx = b[0] - a[0], dy = b[1] - a[1], length = Math.hypot(dx, dy) || 1;
+      const u = i / (points.length - 1);
+      const width = radius * smooth(clamp(u * 2)) * smooth(clamp((1 - u) * 2));
+      return [p[0] - dy / length * width * sign, p[1] + dx / length * width * sign];
+    });
+    return curve(edge(1)) + curve(edge(-1).reverse()).replace(/^M/, 'L') + 'Z';
+  }
   const surfaces = [];
   let frame = 0, measureFrame = 0, lastTime = 0, time = 0, previousScroll = scrollY;
   let scrollStrength = 0, lastScrollTime = 0, randomSeed = 4107;
@@ -77,6 +88,8 @@
     const main = path('energy-flow-main');
     const local = path('energy-flow-local');
     local.setAttribute('filter', 'url(#' + id + '-soft)');
+    const response = path('energy-flow-response');
+    [local, response].forEach(p => {p.style.fill = 'url(#' + id + '-ink)'; p.style.stroke = 'none';});
     const pulseGradients = [];
     const pulsePaths = Array.from({length: 6}, (_, i) => {
       const gradient = element('linearGradient', {id: id + '-pulse-' + i, gradientUnits: 'userSpaceOnUse'});
@@ -88,7 +101,7 @@
       return pulse;
     });
     svg.replaceChildren(defs, layer);
-    const surface = {svg, host, primary, converge, gradient, blur, halo, strands, main, local, pulsePaths, pulseGradients,
+    const surface = {svg, host, primary, converge, gradient, blur, halo, strands, main, local, response, pulsePaths, pulseGradients,
       active: false, vertical: false, length: 1000, width: 1000, height: 84, left: 0, top: 0, points: [], pulses: [],
       nextPulse: 1 + random() * 2, lastInteraction: -1, lastScrollPulse: -1, lastFocus: 0,
       pointer: {position: .5, targetPosition: .5, normal: 0, normalVelocity: 0, targetNormal: 0,
@@ -139,8 +152,8 @@
     let spread = strand ? noise(t * 4.7 + seed, time * (.11 + strand * .013) + seed) * 26 : 0;
     if (s.converge) spread *= 1 - smooth(clamp((t - .48) / .44));
     const distance = (t - p.position) * s.length;
-    const field = Math.exp(-.5 * (distance / (100 + p.speed * .025)) ** 2) * clamp(p.strength, 0, 1.15);
-    const attraction = p.normal * .68 + noise(t * 11 + seed, time * .7 + seed) * (strand ? 4.5 : 1.5) * scale;
+    const field = Math.exp(-.5 * (distance / (120 + p.speed * .025)) ** 2) * clamp(p.strength, 0, 1.35);
+    const attraction = p.normal * 1.15 + noise(t * 11 + seed, time * .7 + seed) * (strand ? 10 : 2.5) * scale;
     const limit = s.vertical ? 12 : s.primary ? 26 : 13;
     const offset = limit * Math.tanh(envelope * ((base + spread) * scale * (1 + focus * .12) + attraction * field) / limit);
     return s.vertical ? [20 + offset, t * s.length] : [t * s.length, (s.primary ? 36 : 20) + offset];
@@ -171,10 +184,16 @@
     s.strands.forEach((path, i) => {path.style.opacity = (.18 + (noise(i * 8, time * .16) + 1) * .06 + boost * .08).toFixed(3);});
     // Local light blooms along the curve instead of producing sparks or following the whole pointer.
     if (s.pointer.strength > .015 && !reduced.matches) {
-      const from = Math.max(0, Math.floor(s.pointer.position * count) - 4), to = Math.min(count, from + 9);
-      s.local.setAttribute('d', curve(paths[0].slice(from, to + 1)));
-      s.local.style.opacity = (clamp(s.pointer.strength) * .30).toFixed(3);
-    } else s.local.style.opacity = '0';
+      // Sample continuously around the interpolated field position; no snapping to mesh vertices.
+      const reach = (s.vertical ? 60 : 120) / s.length;
+      const from = clamp(s.pointer.position - reach), to = clamp(s.pointer.position + reach);
+      const points = Array.from({length: 33}, (_, i) => point(s, mix(from, to, i / 32), 0, boost));
+      const strength = clamp(s.pointer.strength);
+      s.local.setAttribute('d', ribbon(points, (s.vertical ? 2.5 : 4.2) * strength));
+      s.response.setAttribute('d', ribbon(points, (s.vertical ? .8 : 1.5) * strength));
+      s.local.style.opacity = (strength * .58).toFixed(3);
+      s.response.style.opacity = (strength * .9).toFixed(3);
+    } else {s.local.style.opacity = '0'; s.response.style.opacity = '0';}
     s.pulses = s.pulses.filter(pulse => {
       pulse.position += pulse.speed * pulse.direction * dt * (1 + boost * .55);
       pulse.life += dt;
@@ -235,8 +254,8 @@
       p.speed = mix(p.speed, Math.min(speed, 1600), .25);
       p.lastX = event.clientX; p.lastY = event.clientY; p.lastInput = stamp;
       p.targetPosition = clamp(along / s.length);
-      p.targetNormal = clamp(normal, s.vertical ? -10 : -19, s.vertical ? 10 : 19);
-      p.targetStrength = smooth(clamp(1 - distance / (event.pointerType === 'touch' ? 115 : 105))) * (.72 + clamp(p.speed / 900) * .28);
+      p.targetNormal = clamp(normal, s.vertical ? -14 : -32, s.vertical ? 14 : 32);
+      p.targetStrength = smooth(clamp(1 - distance / (event.pointerType === 'touch' ? 125 : 120))) * (.95 + clamp(p.speed / 900) * .2);
     }
     schedule();
   }
