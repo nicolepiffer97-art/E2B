@@ -93,6 +93,7 @@ body.motion-paused *,body.motion-paused *::before,body.motion-paused *::after{sc
 /* One spacing rhythm for all section boundaries, including the sticky story. */
 :root{--section-space:clamp(56px,8svh,100px);--paragraph-size:18px}
 .hero,.section-pad{padding-block:var(--section-space)}
+.worlds.section-pad{padding-bottom:0}
 .hero-copy{padding-block:0}
 .technology-panel>p,.tech-connection p{font-size:var(--paragraph-size);line-height:var(--leading-body)}
 .worlds .energy-world{margin-bottom:var(--section-space)}
