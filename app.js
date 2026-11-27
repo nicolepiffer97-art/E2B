@@ -184,6 +184,7 @@ enableTabs('.method-tabs [role="tab"]','method',selectMethod);
 
 const mapLayoutQuery=matchMedia('(max-width:600px)');
 function layoutEnergyMap(){
+  if(window.E2BEcosystem){window.E2BEcosystem.layout(mapLayoutQuery.matches);return;}
   const compact=mapLayoutQuery.matches;
   const positions=compact?{solar:[90,72],wind:[280,72],bess:[470,72],bio:[90,348],hydrogen:[280,348],digital:[470,348]}:{solar:[155,100],wind:[410,100],bess:[665,100],bio:[155,380],hydrogen:[410,380],digital:[665,380]};
   const center=compact?[280,210]:[410,240];
