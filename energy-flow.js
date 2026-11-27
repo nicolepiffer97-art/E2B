@@ -110,15 +110,6 @@
     return surface;
   }
   addSurface(original, root, true);
-  // Reprise the same energy in the existing white margins, ending together before the contact section.
-  for (const [selector, converge] of [['#territori', false], ['#gruppo', true]]) {
-    const host = document.querySelector(selector);
-    if (!host) continue;
-    const svg = element('svg', {class: 'energy-wave energy-continuation', 'aria-hidden': 'true', focusable: 'false', preserveAspectRatio: 'none'});
-    host.classList.add('energy-continuation-host');
-    host.append(svg);
-    addSurface(svg, host, false, converge);
-  }
   function measure() {
     measureFrame = 0;
     for (const s of surfaces) {
