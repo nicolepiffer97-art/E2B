@@ -665,9 +665,16 @@ a.brand-row:focus-visible{outline-offset:5px}
 .integration-flow::before{display:none}
 .integration-flow .integration-node{display:none}
 .integration-flow .energy-wave{position:absolute;left:0;top:0;width:100%;height:84px;overflow:visible;pointer-events:none}
-.energy-wave use{fill:none;stroke:url(#energy-wave-color);stroke-linecap:round;vector-effect:non-scaling-stroke}
-.energy-wave-halo{stroke-width:3.5;opacity:.11;filter:url(#energy-wave-soft)}
-.energy-wave-thread{stroke-width:.85;opacity:.72}
-.energy-wave-response{stroke:#7c37dd;stroke-width:.55;stroke-linecap:round;stroke-linejoin:round;opacity:0;vector-effect:non-scaling-stroke}
+/* A principal ribbon and five translucent, independently moving filaments. */
+.energy-wave{pointer-events:none;overflow:visible}
+.energy-flow-line{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.energy-flow-main{stroke-width:1.08;opacity:.86}
+.energy-flow-strand{stroke-width:.60;opacity:.22}
+.energy-flow-halo{stroke-width:4.5;opacity:.13}
+.energy-flow-local{stroke-width:6;opacity:0}
+.energy-flow-pulse{stroke-width:1.65;opacity:0}
+.energy-continuation-host{position:relative}
+.energy-continuation{position:absolute;left:var(--pad);bottom:calc((var(--section-space) - 40px)/2);width:calc(100% - var(--pad)*2);height:40px}
 @media(max-width:700px){.integration-flow .energy-wave{left:-10px;top:0;width:40px;height:100%}}
-@media print{.energy-wave-halo{display:none}}
+@media(prefers-reduced-motion:reduce){.energy-flow-pulse,.energy-flow-local{display:none}}
+@media print{.energy-wave{display:none}}
