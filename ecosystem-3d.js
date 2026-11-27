@@ -24,13 +24,13 @@
     };
     const outer = (key, side) => port(base, positions[key], side);
     const inner = side => port(hub, center, side);
-    // Each technology has one direct route to the hub, anchored at exact side midpoints.
+    // The two central technologies share the hub's vertical axis; peripheral ports remain side midpoints.
     const routes = {
       solar: [[outer('solar', 'se'), inner('nw')]],
-      wind: [[outer('wind', 'se'), inner('ne')]],
+      wind: [[translated(base[2], positions.wind), translated(hub[0], center)]],
       bess: [[outer('bess', 'sw'), inner('ne')]],
       bio: [[outer('bio', 'ne'), inner('sw')]],
-      hydrogen: [[outer('hydrogen', 'ne'), inner('se')]],
+      hydrogen: [[translated(base[0], positions.hydrogen), translated(hub[2], center)]],
       digital: [[outer('digital', 'nw'), inner('se')]]
     };
     return {compact, center, positions, base, hub, routes, width: compact ? 560 : 820, height: compact ? 460 : 520,
@@ -74,6 +74,15 @@
       image.setAttribute('height', height * scale); image.setAttribute('y', assetY);
     });
     svg.querySelectorAll('[data-route]').forEach(route => route.setAttribute('d', g.routes[route.dataset.route].map(line).join(' ')));
+    // The central wire passes behind the word Eolico, keeping its axis continuous and the label clear.
+    const label = svg.querySelector('[data-node="wind"] .node-label').getBBox();
+    const cutout = svg.querySelector('#wind-label-cutout');
+    cutout.setAttribute('x', g.positions.wind[0] + label.x - 4);
+    cutout.setAttribute('y', g.positions.wind[1] + label.y - 3);
+    cutout.setAttribute('width', label.width + 8); cutout.setAttribute('height', label.height + 6);
+    const mask = svg.querySelector('#wind-label-clearance');
+    mask.setAttribute('width', g.width); mask.setAttribute('height', g.height);
+    mask.firstElementChild.setAttribute('width', g.width); mask.firstElementChild.setAttribute('height', g.height);
   }
   // Exposed geometry is also used for deterministic midpoint and symmetry checks.
   window.E2BEcosystem = {geometry, layout};
@@ -86,6 +95,9 @@
   const side = element('linearGradient', {id: 'hub-side-3d', x1: 0, y1: 0, x2: 1, y2: 0});
   [[0, '#381368'], [.55, '#6c2fbc'], [1, '#8b46d5']].forEach(([offset, color]) => side.append(element('stop', {offset, 'stop-color': color})));
   defs.append(surface, side);
+  const windMask = element('mask', {id: 'wind-label-clearance', maskUnits: 'userSpaceOnUse', x: 0, y: 0});
+  windMask.append(element('rect', {fill: '#fff'}), element('rect', {id: 'wind-label-cutout', fill: '#000'}));
+  defs.append(windMask);
   const grid = defs.querySelector('#mapgrid');
   grid.setAttribute('width', 44); grid.setAttribute('height', 44);
   const gridLine = grid.querySelector('path');
@@ -94,6 +106,7 @@
   const flows = element('g', {class: 'energy-flows', 'aria-hidden': 'true', fill: 'none'});
   keys.forEach(key => flows.append(element('path', {'data-route': key})));
   network.after(flows);
+  svg.querySelectorAll('[data-route="wind"]').forEach(route => route.setAttribute('mask', 'url(#wind-label-clearance)'));
   const hub = svg.querySelector('.central-node');
   const label = hub.querySelector('.central-label');
   hub.replaceChildren(element('path', {class: 'hub-left', fill: 'url(#hub-side-3d)'}),
@@ -111,4 +124,5 @@
   });
   const observer = new IntersectionObserver(entries => svg.classList.toggle('ecosystem-in-view', entries[0].isIntersecting));
   observer.observe(svg);
+  document.fonts?.ready.then(() => layout(matchMedia('(max-width:600px)').matches));
 })();
