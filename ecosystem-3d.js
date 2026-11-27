@@ -24,21 +24,13 @@
     };
     const outer = (key, side) => port(base, positions[key], side);
     const inner = side => port(hub, center, side);
-    // Intersection of projected grid axes (slopes +1/2 and -1/2), never a guessed elbow.
-    const elbow = (a, b, slope) => {
-      const x = ((b[1] - a[1]) / slope + b[0] + a[0]) / 2;
-      return [x, a[1] + slope * (x - a[0])];
-    };
-    const branch = (key, outerSide, innerSide, slope) => {
-      const a = outer(key, outerSide), b = inner(innerSide);
-      return [a, elbow(a, b, slope), b];
-    };
+    // Each technology has one direct route to the hub, anchored at exact side midpoints.
     const routes = {
       solar: [[outer('solar', 'se'), inner('nw')]],
-      wind: [branch('wind', 'sw', 'nw', -.5), branch('wind', 'se', 'ne', .5)],
+      wind: [[outer('wind', 'se'), inner('ne')]],
       bess: [[outer('bess', 'sw'), inner('ne')]],
       bio: [[outer('bio', 'ne'), inner('sw')]],
-      hydrogen: [branch('hydrogen', 'nw', 'sw', .5), branch('hydrogen', 'ne', 'se', -.5)],
+      hydrogen: [[outer('hydrogen', 'ne'), inner('se')]],
       digital: [[outer('digital', 'nw'), inner('se')]]
     };
     return {compact, center, positions, base, hub, routes, width: compact ? 560 : 820, height: compact ? 460 : 520,

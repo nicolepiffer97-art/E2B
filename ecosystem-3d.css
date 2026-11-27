@@ -1,7 +1,9 @@
 /* Independent visual layers; app.js remains the interaction controller. */
 .system-map:has(.ecosystem-3d){background:radial-gradient(ellipse at 50% 48%,#073451 0%,#021d37 78%);overflow:hidden}
 .ecosystem-3d .map-grid{pointer-events:none}
-.ecosystem-3d .map-node{opacity:1;isolation:isolate}
+.ecosystem-3d .map-node{opacity:.42;isolation:isolate;transition:opacity .4s}
+.ecosystem-3d .map-node:hover,.ecosystem-3d .map-node:focus-visible{opacity:.86}
+.ecosystem-3d .map-node.active{opacity:1}
 .ecosystem-3d .node-base,.ecosystem-3d .map-node.active .node-base{fill:none;stroke:#729dc5;stroke-width:1.25;filter:none;transition:stroke .2s,filter .2s}
 .ecosystem-3d .node-shadow{fill:#000b1e;opacity:.40;filter:blur(4px);pointer-events:none;transition:opacity .35s,filter .35s}
 .ecosystem-3d .node-asset{pointer-events:none;filter:brightness(.85) saturate(.84) drop-shadow(0 5px 5px #000a16aa);transition:transform .35s cubic-bezier(.22,.7,.3,1),filter .35s;transform-box:fill-box;transform-origin:center bottom}
@@ -14,9 +16,9 @@
 .ecosystem-3d .node-hit{pointer-events:all}
 .system-map .ecosystem-3d .node-label{font-family:Corbel,Calibri,"Segoe UI",sans-serif;font-size:24px;font-weight:400;fill:#d5e4f1;stroke:#021e38;stroke-width:4px;paint-order:stroke;pointer-events:none}
 .ecosystem-3d .map-node.active .node-label,.ecosystem-3d .map-node:hover .node-label,.ecosystem-3d .map-node:focus-visible .node-label{fill:#fff}
-.ecosystem-3d .network-lines path{stroke:#5582aa;stroke-width:1.15;transition:stroke .4s,filter .4s}
-.ecosystem-3d .network-lines path.active{stroke:#b79aee;stroke-width:1.55;filter:drop-shadow(0 0 3px #8662d76b)}
-.ecosystem-3d .network-lines path.hovered{stroke:#d6c7ff;stroke-width:1.55}
+.ecosystem-3d .network-lines path{stroke:#5582aa;stroke-width:1.15;opacity:.35;transition:stroke .4s,filter .4s,opacity .4s}
+.ecosystem-3d .network-lines path.active{stroke:#b79aee;stroke-width:1.55;opacity:1;filter:drop-shadow(0 0 3px #8662d76b)}
+.ecosystem-3d .network-lines path.hovered{stroke:#d6c7ff;stroke-width:1.55;opacity:.9}
 .ecosystem-3d .energy-flows path{stroke:#e6ddff;stroke-width:1.7;stroke-dasharray:14 284;stroke-linecap:round;pointer-events:none}
 .ecosystem-3d .energy-flows path.active,.ecosystem-3d .energy-flows path.hovered{animation:flow 5s linear infinite}
 .ecosystem-3d .hub-left,.ecosystem-3d .hub-right{stroke:#aa76e9;stroke-width:1}
