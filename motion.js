@@ -1,4 +1,4 @@
-/* Section reveals, parallax and method navigation. Energy paths removed. */
+/* Section reveals, parallax and method navigation. Energy ribbons live in energy-flow.js. */
 (() => {
   'use strict';
   const main = document.querySelector('#contenuto');

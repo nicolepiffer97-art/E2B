@@ -184,6 +184,7 @@ enableTabs('.method-tabs [role="tab"]','method',selectMethod);
 
 const mapLayoutQuery=matchMedia('(max-width:600px)');
 function layoutEnergyMap(){
+  if(window.E2BEcosystem){window.E2BEcosystem.layout(mapLayoutQuery.matches);return;}
   const compact=mapLayoutQuery.matches;
   const positions=compact?{solar:[90,72],wind:[280,72],bess:[470,72],bio:[90,348],hydrogen:[280,348],digital:[470,348]}:{solar:[155,100],wind:[410,100],bess:[665,100],bio:[155,380],hydrogen:[410,380],digital:[665,380]};
   const center=compact?[280,210]:[410,240];
@@ -211,10 +212,6 @@ navigation.addEventListener('click',event=>{if(event.target.closest('a'))closeMe
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&menuButton.getAttribute('aria-expanded')==='true'){closeMenu();menuButton.focus();}});
 document.addEventListener('click',event=>{if(!event.target.closest('.header'))closeMenu();});
 const desktopQuery=matchMedia('(min-width:961px)');desktopQuery.addEventListener('change',closeMenu);
-const notes=$('#note-concept');
-$$('[data-open-notes]').forEach(button=>button.addEventListener('click',event=>{event.preventDefault();notes.showModal();}));
-$('.dialog-close').addEventListener('click',()=>notes.close());$('.dialog-dismiss').addEventListener('click',()=>notes.close());
-notes.addEventListener('click',event=>{if(event.target===notes){const bounds=notes.getBoundingClientRect();if(event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom)notes.close();}});
 let briefText='';
 $('#brief-form').addEventListener('submit',event=>{
   event.preventDefault();const form=event.currentTarget;if(!form.reportValidity())return;
